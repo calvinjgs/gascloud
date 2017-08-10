@@ -3,6 +3,21 @@
 Created on Mon Oct 03 10:41:44 2016
 
 @author: Calvin Calvin
+
+Simulates particles attracted by gravity, and affected by friction.
+Builds a data array with shape (I, N, 9)
+I = tmax/dt is number of iterations
+N is number of particles
+at data[i, n], we have an array of properties associated
+with particle n at iteration i. These properties are
+the position components x, y, z.
+the velocity components vx, vy, vz.
+the acceleration components ax, ay, az.
+so data[i, n] = [x, y, z, vx, vy, vz, ax, ay, az]
+The positions are randomly decided with maximum distance R from origin
+The velocities are randomly decided componentwise between -K and K.
+
+Can be saved to a .npy file for use with gascloud_anim.py
 """
 
 
@@ -56,18 +71,18 @@ def dv(p1, p2):
 #linear velocity dependance, with inv. sq. r dependance
 def friction(p1, p2):
     c = 5e-3
-    r = r(p1, p2)
-    if r > TOO_CLOSE and r < TOO_CLOSE*2:
-        dv = (p2.vel - p1.vel)
-        return c*dv/r**2
+    rr = r(p1, p2)
+    if rr > TOO_CLOSE and rr < TOO_CLOSE*2:
+        dv = p2[3:6] - p1[3:6]
+        return c*dv/rr**2
     else:
-        return (0,0,0)
+        return np.array((0,0,0))
 
 #gravity-like attractive force
 #inv. sq. r dependance
 def gravacc(p1, p2):
     k = 1e-1
-    r = p1.r(p2)
+    rr = r(p1, p2)
     is_close_x = abs(dx(p1,p2)) < TOO_CLOSE
     is_close_y = abs(dy(p1,p2)) < TOO_CLOSE
     is_close_z = abs(dz(p1,p2)) < TOO_CLOSE
@@ -80,8 +95,8 @@ def gravacc(p1, p2):
         dir_z = dz(p1,p2)/abs(dz(p1,p2))
 
     acc_const = 0
-    if not r < TOO_CLOSE:
-        acc_const = (k/(r)**2)
+    if not rr < TOO_CLOSE:
+        acc_const = (k/(rr)**2)
     acc_dir = np.array([dir_x, dir_y, dir_z])
     acc = acc_const*acc_dir
     return acc
@@ -146,12 +161,12 @@ def update_progress(progress):
 
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-N", help="Numer of particles", default=10, type=int)
-    parser.add_argument("-R", help="Maximum radius from origin", default=20, type=float)
-    parser.add_argument("-K", help="Magnitude of initial kinetic energy per particle", default=0.1, type=float)
+    parser.add_argument("-N", help="Numer of particles.", default=10, type=int)
+    parser.add_argument("-R", help="Maximum radius from origin.", default=20, type=float)
+    parser.add_argument("-K", help="Magnitude of initial kinetic energy per particle/", default=0.1, type=float)
     parser.add_argument("-tmax", help="Maximum time to simulate.", default=1e3, type=float)
     parser.add_argument("-dt", help="Time step increase.", default=1e-1, type=float)
-    parser.add_argument("-s", "--save", help="save as .npy file (leave out '.npy')", default=str("gascloud_data"), type=str)
+    parser.add_argument("-s", "--save", help="save as .npy file.", default=str("gascloud_data"), type=str)
     #add param file input argument
     args = parser.parse_args()
     iterations = args.tmax/args.dt

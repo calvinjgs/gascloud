@@ -3,6 +3,10 @@
 Created on Sat Oct  8 16:14:13 2016
 
 @author: Calvin Calvin
+
+Visualizes and animates the gascloud simulation.
+Takes a .npy generated from gascloud_sim.py
+
 """
 
 
@@ -44,7 +48,6 @@ def plot3D(t_0, t_f, data):
 def __main__():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="gas cloud .npy file to animate (include .npy)", default="gc_data.npy", type=str)
-    #parser.add_argument("-s", "--save", help="save as .npy file (leavout '.npy')", default=str("gascloud_data"), type=str)
     parser.add_argument("-ti", help="initial iteration", default=0, type=int)
     parser.add_argument("-tf", help="final iteration", type=int)
 
