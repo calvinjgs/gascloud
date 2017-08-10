@@ -161,7 +161,7 @@ def update_progress(progress):
 
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-N", help="Numer of particles.", default=10, type=int)
+    parser.add_argument("-N", help="Number of particles.", default=10, type=int)
     parser.add_argument("-R", help="Maximum radius from origin.", default=20, type=float)
     parser.add_argument("-K", help="Magnitude of initial kinetic energy per particle/", default=0.1, type=float)
     parser.add_argument("-tmax", help="Maximum time to simulate.", default=1e3, type=float)

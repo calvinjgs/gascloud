@@ -47,7 +47,7 @@ def plot3D(t_0, t_f, data):
 
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", help="gas cloud .npy file to animate (include .npy)", default="gc_data.npy", type=str)
+    parser.add_argument("-f", "--file", help="gas cloud .npy file to animate (include .npy)", default="gascloud_data.npy", type=str)
     parser.add_argument("-ti", help="initial iteration", default=0, type=int)
     parser.add_argument("-tf", help="final iteration", type=int)
 
